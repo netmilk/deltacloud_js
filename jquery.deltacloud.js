@@ -190,7 +190,8 @@ function Deltacloud(url,user,pass){
   };
 
   // CREATE INSTANCE
-  this.create_instance(image_id) {
-    
+  this.create_instance = function(image_id) {
+  
   }
+    
 }
