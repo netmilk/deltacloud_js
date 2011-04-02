@@ -6,7 +6,7 @@
 
 
 ##Example
-<tt>d = new deltacloud</tt>
+<tt>d = new Deltacloud(url, username, password)</tt>
 
 <tt>d.instances</tt>
 

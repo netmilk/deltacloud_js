@@ -5,7 +5,7 @@ function make_base_auth(user, pass) {
 }
 
 
-function deltacloud(url,user,pass){
+function Deltacloud(url,user,pass){
    this.connected = false;
    this.api_version = undefined;
    this.driver = undefined;
