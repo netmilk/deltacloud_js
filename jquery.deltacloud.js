@@ -6,25 +6,13 @@ function make_base_auth(user, pass) {
 
 
 function Deltacloud(url,user,pass){
-   this.connected = false;
-   this.api_version = undefined;
-   this.driver = undefined;
-
-   var encoded_auth
-   encoded_auth = make_base_auth(user,pass);
-   //FIXME url last slash escaping    
+  //TODO cache 
+  
+  var encoded_auth
+  encoded_auth = make_base_auth(user,pass);
+  
    
-   this.instances = function(){ return get_request(url + "/instances")};
-   this.images = function(){ return get_request(url + "/images")};   
-   this.hardware_profiles = function(){ return get_request(url + "/hardware_profiles")};   
-   this.realms = function(){ return get_request(url + "/realms")};   
-
-   this.instance = function(id){ return get_request(url + "/instances/" + id)};
-   this.image = function(id){ return get_request(url + "/images/" + id)};   
-   this.hardware_profile = function(id){ return get_request(url + "/hardware_profiles/" + id)};   
-   this.realm = function(id){ return get_request(url + "/realms/" + id)};   
-
-   var get_request = function(request_url){
+  var get_request = function(request_url){
     //FIXME url slashes escaping    
     console.log("Querying url: " + url);  
     response = $.ajax({
@@ -55,4 +43,68 @@ function Deltacloud(url,user,pass){
       // error
     }
   }
+
+  //FIXME url last slash escaping
+   
+  connection_response = get_request(base_url);
+
+  if(connection_response == false){
+    this.connected = false;   
+  } else{
+    this.connected = true;      
+    this.api_version = connection_response.api.version;
+    this.driver = connection_response.api.driver;
+  }
+   
+
+  
+  // INSTANCES  
+  this.instances = function(){ 
+    request = get_request(url + "/instances")
+   
+    if( request == false ){ return false };
+
+    var to_iterate;
+    if($.isArray(request.instances.instance)){
+      to_iterate = request.instances.instance;
+    } else {
+      to_iterate = request.instances;      
+    }
+  
+    var to_return = [];   
+    $.each(to_iterate, function(key,instance){
+      to_return.push(instance)
+    });
+  
+    return to_return;
+    };
+  
+  // IMAGES
+  this.images = function(){ 
+    request = get_request(url + "/images")
+  
+    if( request == false ){ return false };
+  
+    var to_iterate;
+    if($.isArray(request.images.image)){
+      to_iterate = request.images.image;
+    } else {
+      to_iterate = request.images;      
+    }
+
+    var to_return = [];   
+    $.each(to_iterate, function(key,image){
+      to_return.push(image)
+    });
+
+    return to_return;
+  };
+
+  this.hardware_profiles = function(){ return get_request(url + "/hardware_profiles")};   
+  this.realms = function(){ return get_request(url + "/realms")};   
+
+  this.instance = function(id){ return get_request(url + "/instances/" + id)};
+  this.image = function(id){ return get_request(url + "/images/" + id)};   
+  this.hardware_profile = function(id){ return get_request(url + "/hardware_profiles/" + id)};   
+  this.realm = function(id){ return get_request(url + "/realms/" + id)};   
 }

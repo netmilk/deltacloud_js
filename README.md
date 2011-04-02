@@ -8,13 +8,13 @@
 ##Example
 <tt>d = new Deltacloud(url, username, password)</tt>
 
-<tt>d.instances</tt>
+<tt>d.instances()</tt>
 
-<tt>d.images</tt>
+<tt>d.images()</tt>
 
-<tt>d.realms</tt>
+<tt>d.realms()</tt>
 
-<tt>d.harware_profiles</tt>
+<tt>d.harware_profiles()</tt>
 
 <tt>d.instance(id)</tt>
 
