@@ -6,12 +6,12 @@ function make_base_auth(user, pass) {
 
 
 function Deltacloud(url,user,pass){
-  //TODO cache 
   
   var encoded_auth
   encoded_auth = make_base_auth(user,pass);
   
-   
+  this.cache = {}
+  
   var get_request = function(request_url){
     //FIXME url slashes escaping    
     console.log("Querying url: " + url);  
@@ -44,10 +44,10 @@ function Deltacloud(url,user,pass){
     }
   }
 
-  //FIXME url last slash escaping
-   
-  connection_response = get_request(base_url);
+  //TODO last slash escaping of url variable
 
+  //CONNECT    
+  connection_response = get_request(base_url);
   if(connection_response == false){
     this.connected = false;   
   } else{
@@ -75,7 +75,9 @@ function Deltacloud(url,user,pass){
     $.each(to_iterate, function(key,instance){
       to_return.push(instance)
     });
-  
+    
+    
+    this.cache.instances = to_return
     return to_return;
     };
   
@@ -97,14 +99,98 @@ function Deltacloud(url,user,pass){
       to_return.push(image)
     });
 
+    this.cache.images = to_return
     return to_return;
   };
 
-  this.hardware_profiles = function(){ return get_request(url + "/hardware_profiles")};   
-  this.realms = function(){ return get_request(url + "/realms")};   
+  // HARDWARE PROFILES
+  this.hardware_profiles = function(){ 
+    request = get_request(url + "/hardware_profiles")
+  
+    if( request == false ){ return false };
+  
+    var to_iterate;
+    if($.isArray(request.hardware_profiles.hardware_profile)){
+      to_iterate = request.hardware_profiles.hardware_profile;
+    } else {
+      to_iterate = request.hardware_profiles;      
+    }
 
-  this.instance = function(id){ return get_request(url + "/instances/" + id)};
-  this.image = function(id){ return get_request(url + "/images/" + id)};   
-  this.hardware_profile = function(id){ return get_request(url + "/hardware_profiles/" + id)};   
-  this.realm = function(id){ return get_request(url + "/realms/" + id)};   
+    var to_return = [];   
+    $.each(to_iterate, function(key,hardware_profile){
+      to_return.push(hardware_profile)
+    });
+
+    this.cache.hardware_profiles = to_return
+    return to_return;
+  };
+
+  // REALMS
+  this.realms = function(){ 
+    request = get_request(url + "/realms")
+  
+    if( request == false ){ return false };
+  
+    var to_iterate;
+    if($.isArray(request.realms.realm)){
+      to_iterate = request.realms.realm;
+    } else {
+      to_iterate = request.realms;      
+    }
+
+    var to_return = [];   
+    $.each(to_iterate, function(key,realm){
+      to_return.push(realm)
+    });
+
+    this.cache.realms = to_return
+    return to_return;
+  };
+
+
+
+  // INSTANCE
+  this.instance = function(id){ 
+    response = get_request(url + "/instances/" + id)
+    if(response == false){
+      return false
+    } else {
+      return response.instance 
+    }
+  };
+
+  // IMAGE
+  this.image = function(id){ 
+    response = get_request(url + "/images/" + id)
+    if(response == false){
+      return false
+    } else {
+      return response.image 
+    }
+  };
+
+  // HARDWARE PROFILE
+  this.hardware_profile = function(id){ 
+    response = get_request(url + "/hardware_profiles/" + id)
+    if(response == false){
+      return false
+    } else {
+      return response.hardware_profile 
+    }
+  };
+
+  // HARDWARE PROFILE
+  this.realm = function(id){ 
+    response = get_request(url + "/realms/" + id)
+    if(response == false){
+      return false
+    } else {
+      return response.realm 
+    }
+  };
+
+  // CREATE INSTANCE
+  this.create_instance(image_id) {
+    
+  }
 }
