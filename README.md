@@ -18,6 +18,7 @@ create instance:
 <tt>d.instances()</tt>
 
 actions:
+
 <tt>d.instances()[1].actions</tt>
 
 perform action:
