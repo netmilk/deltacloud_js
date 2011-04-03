@@ -12,8 +12,8 @@ function Deltacloud(url,user,pass){
   
   this.cache = {}
   
+  //GET REQUEST
   var get_request = function(request_url){
-    //FIXME url slashes escaping    
     console.log("Querying url: " + url);  
     response = $.ajax({
       url: request_url,
@@ -25,6 +25,41 @@ function Deltacloud(url,user,pass){
         req.setRequestHeader('Authorization', encoded_auth);
       },
       success: function(data) {
+        //TODO log url and data
+        console.log("Success! " );
+      },
+
+      error: function(request, status, error) {
+        console.log("Error status " + status);
+        console.log("Error request status text: " + request.statusText);
+        console.log("Error request status: " + request.status);
+        console.log("Error request response text: " + request.responseText);
+        console.log("Error response header: " + request.getAllResponseHeaders());
+      }
+    })
+    if(response.status == 200){
+      return $.parseJSON(response.responseText)  
+    } else{
+      return false
+      // error
+    }
+  }
+
+  //POST REQUEST
+  var post_request = function(request_url, data){
+    console.log("Querying url: " + url);  
+    response = $.ajax({
+      url: request_url,
+      data: data,
+      type: "POST",
+      dataType: "json",
+      async: false,
+      cache: false,
+      beforeSend: function(req) {
+        req.setRequestHeader('Authorization', encoded_auth);
+      },
+      success: function(data) {
+        //TODO log url and data        
         console.log("Success! " );
       },
 
@@ -190,8 +225,9 @@ function Deltacloud(url,user,pass){
   };
 
   // CREATE INSTANCE
-  this.create_instance = function(image_id) {
-  
+  this.create_instance = function(data) {
+    //TODO add validation to existence of image, hwp and realm
+    response = post_request(url + "/instances",data);
+    return response;
   }
-    
 }

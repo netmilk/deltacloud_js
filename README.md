@@ -7,6 +7,10 @@
 
 
 ##Example
+create instance
+
+<tt>api.create_instance({image_id: 5, hwp_id: 2476,realm_id: "prague-l1-personal",name: "scout"})</tt>
+
 <tt>d = new Deltacloud(url, username, password)</tt>
 
 <tt>d.instances()</tt>
@@ -25,7 +29,8 @@
 
 <tt>d.hardware_profile(id)</tt>
 
-cache example:
+example how to access cache:
+
 <tt>d.cache.instances</tt>
 
 <tt>d.cache.images</tt>
@@ -38,3 +43,5 @@ etc...
 - more DRYer solution for: sanitizing first level of response to array, returning first level of every single object 
 - try to eradicate Base64 library used for assembling http basic auth header
 - eradicate jQuery
+- consider to have declared class for each member of instance,image,hwp,realm
+- driver is mistycally blockong preceding actions, try to resolve eg. show loading modal window - it's killing user experience
