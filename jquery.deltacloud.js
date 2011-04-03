@@ -64,6 +64,7 @@ function Deltacloud(url,user,pass){
       },
 
       error: function(request, status, error) {
+        //FIXME handle non json response here
         console.log("Error status " + status);
         console.log("Error request status text: " + request.statusText);
         console.log("Error request status: " + request.status);
@@ -108,7 +109,7 @@ function Deltacloud(url,user,pass){
   
     var to_return = [];   
     $.each(to_iterate, function(key,instance){
-      to_return.push(instance)
+      to_return.push(refactor_instance_actions(instance))
     });
     
     
@@ -190,7 +191,8 @@ function Deltacloud(url,user,pass){
     if(response == false){
       return false
     } else {
-      return response.instance 
+      //FIXME return refactored instance
+      return refactor_instance_actions(response.instance) 
     }
   };
 
@@ -228,6 +230,44 @@ function Deltacloud(url,user,pass){
   this.create_instance = function(data) {
     //TODO add validation to existence of image, hwp and realm
     response = post_request(url + "/instances",data);
+    
+    //FIXME return refactored instance
     return response;
   }
+  
+  
+  // refactor instance actions
+  var refactor_instance_actions = function(instance){
+
+    var array_to_return = [];
+    //making action names as keys of returning object
+    $.each(instance.actions.link, function(index, link){
+      array_to_return.push(link.rel);
+    })
+
+    //FIXME expecting there's no action called 'link'
+    // empty link after refactoring
+
+    var object_to_return = {};
+
+    $.each(instance.actions.link, function(index, link){
+      object_to_return[link.rel] = {}
+      object_to_return[link.rel].method = link.method;
+      object_to_return[link.rel].href = link.href;
+    })
+
+    instance.actions_details = object_to_return;
+    instance.actions = array_to_return;
+
+    //add dynamic methods by action names
+    $.each(instance.actions_details, function(action,details){
+      instance[action] = function(){
+        //FIXME select according ajax method by action method
+        post_request(details.href,{})
+      }
+    })  
+    
+    return instance
+  }
+  
 }
