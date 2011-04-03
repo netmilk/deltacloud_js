@@ -37,6 +37,7 @@ function Deltacloud(url,user,pass){
         console.log("Error response header: " + request.getAllResponseHeaders());
       }
     })
+
     if(response.status == 200){
       return $.parseJSON(response.responseText)  
     } else{
@@ -268,6 +269,14 @@ function Deltacloud(url,user,pass){
     })  
     
     return instance
+  }
+  
+  //FILL CACHE
+  this.fill_cache = function(){
+    this.instances();
+    this.images();
+    this.realms();
+    this.hardware_profiles();
   }
   
 }

@@ -57,3 +57,5 @@ etc...
 - consider to have declared class for each member of instance,image,hwp,realm
 - driver is mistycally blockong preceding actions, try to resolve eg. show loading modal window - it's killing user experience
 - remove "magic" timestamp from url /services/deltacloud/instances?_=1301792300944 
+- toggle sync / async mode, add callbacs to async mode
+- consider declare functions dynamicaly from api capabilities
